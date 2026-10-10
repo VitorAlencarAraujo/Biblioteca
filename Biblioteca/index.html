@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Documentação do projeto Biblioteca: banco de dados relacional desenvolvido em MySQL para a Atividade IV de BCD.">
+  <title>Biblioteca | Atividade IV - BCD</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a class="brand" href="#inicio" aria-label="Biblioteca - início">
+        <span class="brand-icon" aria-hidden="true">B</span>
+        <span>Biblioteca</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <a href="#projeto">Projeto</a>
+        <a href="#modelo">Modelagem</a>
+        <a href="#normalizacao">Formas normais</a>
+        <a href="#consultas">Consultas SQL</a>
+        <a href="#entrega">Entrega</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-pattern" aria-hidden="true"></div>
+      <div class="container hero-content">
+        <span class="eyebrow">ATIVIDADE IV · BCD · MYSQL</span>
+        <h1>Conhecimento organizado.<br><span>Dados bem relacionados.</span></h1>
+        <p>Um banco de dados relacional para organizar livros, autores, leitores e empréstimos da Biblioteca.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#projeto">Conheça o projeto <span aria-hidden="true">↘</span></a>
+          <a class="button button-ghost" href="#modelo">Explorar a modelagem</a>
+        </div>
+        <div class="hero-note"><span class="status-dot"></span> Projeto acadêmico desenvolvido com MySQL</div>
+      </div>
+      <div class="hero-book" aria-hidden="true">
+        <div class="book book-back"></div>
+        <div class="book book-front"><span>Biblioteca<br>Saber Mais</span><i>Conhecimento sem limites</i></div>
+        <div class="book book-page"></div>
+      </div>
+    </section>
+
+    <section class="stats-section" aria-label="Resumo do projeto">
+      <div class="container stats-grid">
+        <article class="stat-card"><span class="stat-number">04</span><span class="stat-label">Tabelas principais</span></article>
+        <article class="stat-card"><span class="stat-number">1:N</span><span class="stat-label">Relacionamentos</span></article>
+        <article class="stat-card"><span class="stat-number">15</span><span class="stat-label">Consultas planejadas</span></article>
+        <article class="stat-card"><span class="stat-number">SQL</span><span class="stat-label">MySQL</span></article>
+      </div>
+    </section>
+
+    <section class="section" id="projeto">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">01 · VISÃO GERAL</span>
+          <h2>O projeto <span>Biblioteca</span></h2>
+          <p>Uma proposta de organização de informações para uma biblioteca fictícia, com foco em consistência, consulta e manutenção dos dados.</p>
+        </div>
+        <div class="two-column">
+          <article class="content-card">
+            <div class="card-icon" aria-hidden="true">⌕</div>
+            <h3>O problema</h3>
+            <p>Sem um SGBD relacional, a biblioteca poderia depender de planilhas separadas para registrar livros, autores, usuários e empréstimos. Isso aumenta o risco de dados duplicados, informações desatualizadas e dificuldade para descobrir quem está com cada livro.</p>
+            <ul class="check-list problem-list">
+              <li>Registros duplicados ou inconsistentes</li>
+              <li>Demora para localizar livros e empréstimos</li>
+              <li>Dificuldade para acompanhar devoluções</li>
+              <li>Relatórios feitos manualmente</li>
+            </ul>
+          </article>
+          <article class="content-card solution-card">
+            <div class="card-icon" aria-hidden="true">✦</div>
+            <h3>A solução proposta</h3>
+            <p>Centralizar os registros no MySQL e conectar as tabelas por meio de chaves primárias e estrangeiras. Assim, as informações podem ser consultadas em conjunto sem repetir todos os dados em cada registro.</p>
+            <ul class="check-list">
+              <li>Dados organizados em tabelas</li>
+              <li>Relacionamentos entre entidades</li>
+              <li>Consultas com filtros e agrupamentos</li>
+              <li>Base preparada para relatórios futuros</li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout"><strong>Objetivo:</strong> demonstrar como um banco de dados relacional pode melhorar o controle do acervo e dos empréstimos de uma biblioteca.</div>
+      </div>
+    </section>
+
+    <section class="section section-tinted" id="modelo">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">02 · MODELAGEM LÓGICA</span>
+          <h2>Como os dados se <span>conectam</span></h2>
+          <p>O modelo atual utiliza quatro tabelas principais. As chaves estrangeiras mantêm as relações entre os registros.</p>
+        </div>
+        <div class="schema" role="img" aria-label="Diagrama simplificado das relações: Autores um para muitos Livros; Usuários um para muitos Empréstimos; Livros um para muitos Empréstimos.">
+          <article class="schema-table">
+            <div class="schema-title"><span>▤</span> Autores</div>
+            <div class="schema-row"><b>PK</b> id_autor <small>INT</small></div>
+            <div class="schema-row">nome <small>VARCHAR(100)</small></div>
+          </article>
+          <div class="relation relation-author"><span>1</span><div class="relation-line"></div><span>N</span><small>escreve</small></div>
+          <article class="schema-table">
+            <div class="schema-title"><span>▤</span> Livros</div>
+            <div class="schema-row"><b>PK</b> id_livro <small>INT</small></div>
+            <div class="schema-row">titulo <small>VARCHAR(150)</small></div>
+            <div class="schema-row">ano_publicacao <small>INT</small></div>
+            <div class="schema-row">categoria <small>VARCHAR(50)</small></div>
+            <div class="schema-row"><b class="fk">FK</b> id_autor <small>INT</small></div>
+          </article>
+          <div class="relation relation-book"><span>1</span><div class="relation-line"></div><span>N</span><small>é emprestado em</small></div>
+          <article class="schema-table schema-loans">
+            <div class="schema-title"><span>▤</span> Empréstimos</div>
+            <div class="schema-row"><b>PK</b> id_emprestimo <small>INT</small></div>
+            <div class="schema-row"><b class="fk">FK</b> id_usuario <small>INT</small></div>
+            <div class="schema-row"><b class="fk">FK</b> id_livro <small>INT</small></div>
+            <div class="schema-row">data_emprestimo <small>DATE</small></div>
+            <div class="schema-row">data_devolucao <small>DATE / NULL</small></div>
+          </article>
+          <div class="relation relation-user"><span>1</span><div class="relation-line"></div><span>N</span><small>realiza</small></div>
+          <article class="schema-table schema-users">
+            <div class="schema-title"><span>▤</span> Usuários</div>
+            <div class="schema-row"><b>PK</b> id_usuario <small>INT</small></div>
+            <div class="schema-row">nome <small>VARCHAR(100)</small></div>
+            <div class="schema-row">telefone <small>VARCHAR(20)</small></div>
+            <div class="schema-row">email <small>VARCHAR(100)</small></div>
+          </article>
+        </div>
+        <div class="model-notes">
+          <article><span class="tag">1:N</span><div><h3>Autor → Livros</h3><p>Um autor pode estar associado a vários livros. Neste modelo simplificado, cada livro aponta para um autor.</p></div></article>
+          <article><span class="tag">1:N</span><div><h3>Usuário → Empréstimos</h3><p>Um usuário pode realizar vários empréstimos ao longo do tempo; cada empréstimo pertence a um usuário.</p></div></article>
+          <article><span class="tag">1:N</span><div><h3>Livro → Empréstimos</h3><p>Um livro pode aparecer em vários empréstimos ao longo do tempo; cada registro de empréstimo referencia um livro.</p></div></article>
+        </div>
+        <p class="small-note">PK = chave primária · FK = chave estrangeira. O modelo representa o esquema atual do script SQL informado.</p>
+      </div>
+    </section>
+
+    <section class="section" id="normalizacao">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">03 · QUALIDADE DOS DADOS</span>
+          <h2>Formas <span>normais</span></h2>
+          <p>A normalização ajuda a reduzir redundâncias e anomalias de inserção, atualização e exclusão.</p>
+        </div>
+        <div class="normalization-grid">
+          <article class="normal-card"><span class="normal-number">1FN</span><h3>Primeira Forma Normal</h3><p>Cada campo armazena um valor atômico, sem listas de valores na mesma coluna. Por exemplo, cada usuário tem um campo de telefone, em vez de uma lista de telefones em uma única célula.</p></article>
+          <article class="normal-card"><span class="normal-number">2FN</span><h3>Segunda Forma Normal</h3><p>As tabelas usam chaves primárias simples, então seus atributos não dependem apenas de parte de uma chave composta. Se uma tabela associativa for adicionada no futuro, seus campos devem depender da chave composta inteira.</p></article>
+          <article class="normal-card"><span class="normal-number">3FN</span><h3>Terceira Forma Normal</h3><p>Os atributos não-chave devem depender da chave da tabela, e não de outros atributos não-chave. Separar autores em uma tabela própria evita repetir o nome do autor em cada livro.</p></article>
+          <article class="normal-card"><span class="normal-number">4FN</span><h3>Quarta Forma Normal</h3><p>Evita dependências multivaloradas independentes na mesma tabela. Se um livro puder ter vários autores e várias palavras-chave, essas relações independentes devem ficar em tabelas associativas separadas.</p></article>
+        </div>
+        <p class="callout subtle-callout"><strong>Nota acadêmica:</strong> estas são orientações de normalização. Para afirmar formalmente que o banco atende à 4FN, é necessário analisar as dependências multivaloradas do domínio; não basta apenas ter tabelas separadas.</p>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="consultas">
+      <div class="container">
+        <div class="section-heading light-heading">
+          <span class="eyebrow">04 · SQL NA PRÁTICA</span>
+          <h2>Consultas que transformam <span>dados em respostas</span></h2>
+          <p>As consultas SQL ajudam a responder perguntas do dia a dia da biblioteca.</p>
+        </div>
+        <div class="query-grid">
+          <article class="query-card"><span class="query-type">INNER JOIN</span><h3>Quem pegou cada livro?</h3><p>Combina empréstimos, usuários e livros para mostrar o leitor e o título associado a cada registro.</p></article>
+          <article class="query-card"><span class="query-type">WHERE · IS NULL</span><h3>Quais livros não foram devolvidos?</h3><p>Filtra os empréstimos cuja data de devolução ainda não foi preenchida.</p></article>
+          <article class="query-card"><span class="query-type">LIKE</span><h3>O título contém uma palavra?</h3><p>Localiza livros por partes do título, útil quando o usuário não sabe o nome completo.</p></article>
+          <article class="query-card"><span class="query-type">BETWEEN</span><h3>Quais empréstimos ocorreram no mês?</h3><p>Filtra registros entre duas datas para consultar o movimento de um período.</p></article>
+          <article class="query-card"><span class="query-type">GROUP BY · COUNT</span><h3>Qual categoria tem mais livros?</h3><p>Agrupa os livros por categoria e conta quantos registros existem em cada grupo.</p></article>
+          <article class="query-card"><span class="query-type">ORDER BY</span><h3>Como ordenar o catálogo?</h3><p>Organiza títulos alfabeticamente ou publicações por ano, facilitando a leitura dos resultados.</p></article>
+        </div>
+        <div class="sql-example">
+          <div class="code-header"><span><i></i><i></i><i></i> Exemplo de consulta</span><span>MySQL</span></div>
+          <pre><code>SELECT
+    Usuarios.nome AS usuario,
+    Livros.titulo AS livro,
+    Emprestimos.data_emprestimo,
+    Emprestimos.data_devolucao
+FROM Emprestimos
+INNER JOIN Usuarios
+    ON Emprestimos.id_usuario = Usuarios.id_usuario
+INNER JOIN Livros
+    ON Emprestimos.id_livro = Livros.id_livro
+ORDER BY Emprestimos.data_emprestimo DESC;</code></pre>
+          <p>Resultado esperado: uma lista de empréstimos com o nome do usuário, título do livro e datas registradas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="nuvem">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">05 · HOSPEDAGEM E BACKUP</span>
+          <h2>Do computador para a <span>nuvem</span></h2>
+          <p>O banco pode ser hospedado em um serviço gerenciado de MySQL, como Azure Database for MySQL ou Aiven, conforme a disponibilidade do plano escolhido.</p>
+        </div>
+        <div class="steps-grid">
+          <article class="step-card"><span>01</span><h3>Criar o serviço</h3><p>Selecionar o provedor, criar um servidor MySQL e definir credenciais seguras.</p></article>
+          <article class="step-card"><span>02</span><h3>Configurar a rede</h3><p>Permitir acesso somente a partir do IP necessário e habilitar conexões criptografadas.</p></article>
+          <article class="step-card"><span>03</span><h3>Exportar o banco</h3><p>Gerar um arquivo SQL com a estrutura das tabelas e os dados do banco local.</p></article>
+          <article class="step-card"><span>04</span><h3>Importar e testar</h3><p>Executar o script no servidor remoto e conferir tabelas, registros e consultas.</p></article>
+        </div>
+        <div class="callout"><strong>Segurança:</strong> não publique senhas, chaves de acesso ou endereços privados no GitHub. Antes de criar um serviço na nuvem, confira os custos e limites do plano.</div>
+      </div>
+    </section>
+
+    <section class="section section-tinted" id="entrega">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">06 · ENTREGÁVEIS</span>
+          <h2>Checklist da <span>atividade</span></h2>
+          <p>Use esta lista para acompanhar o que ainda precisa ser incluído no repositório e enviado ao Classroom.</p>
+        </div>
+        <div class="deliverables">
+          <label class="deliverable"><input type="checkbox"><span class="fake-check"></span><span><strong>Script SQL</strong><small>Criação do banco, tabelas, dados de exemplo e 15 consultas.</small></span></label>
+          <label class="deliverable"><input type="checkbox"><span class="fake-check"></span><span><strong>Modelagem lógica</strong><small>Diagrama com campos, tipos, relacionamentos e cardinalidades.</small></span></label>
+          <label class="deliverable"><input type="checkbox"><span class="fake-check"></span><span><strong>Formas normais</strong><small>Explicação de 1FN, 2FN, 3FN e 4FN aplicada ao modelo.</small></span></label>
+          <label class="deliverable"><input type="checkbox"><span class="fake-check"></span><span><strong>Hospedagem e dump</strong><small>Passo a passo de hospedagem e exportação da estrutura e dos dados.</small></span></label>
+          <label class="deliverable"><input type="checkbox"><span class="fake-check"></span><span><strong>README e GitHub</strong><small>Documentação do projeto, arquivos SQL e instruções para executar.</small></span></label>
+          <label class="deliverable"><input type="checkbox"><span class="fake-check"></span><span><strong>Deploy e apresentação</strong><small>Publicar a página e preparar os materiais para o Classroom.</small></span></label>
+        </div>
+        <p class="small-note">Os itens marcados nesta página são apenas um checklist visual e não são salvos após atualizar o navegador.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <a class="brand footer-brand" href="#inicio"><span class="brand-icon">B</span><span>Biblioteca <strong>Saber Mais</strong></span></a>
+      <p>Atividade IV · Banco de Dados (BCD) · MySQL</p>
+      <a class="back-top" href="#inicio">Voltar ao topo ↑</a>
+    </div>
+  </footer>
+</body>
+</html>
